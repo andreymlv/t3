@@ -1,5 +1,5 @@
 
-#include <cmath>
+#include <array>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
@@ -55,20 +55,29 @@ private:
         return shape;
     }
 
-    /*
-    sf::Shape makeX(float x_0, float y_0)
+    std::array<sf::VertexArray, 2> makeX(float x_0, float y_0)
     {
-        sf::Shape *shape;
-        
-        return shape;
+
+        sf::VertexArray first(sf::LineStrip, 2);
+        first[0].position = sf::Vector2f(x_0 - 25, y_0 - 25);
+        first[1].position = sf::Vector2f(x_0 + 25, y_0 + 25);
+
+        sf::VertexArray second(sf::LineStrip, 2);
+        second[0].position = sf::Vector2f(x_0 + 25, y_0 - 25);
+        second[1].position = sf::Vector2f(x_0 - 25, y_0 + 25);
+
+        std::array<sf::VertexArray, 2> x = {first, second};
+
+        return x;
     }
-    */
 
     void render()
     {
         this->window->clear(sf::Color::Black);
-        this->window->draw(this->makeCircle(39.0f, 30.0f));
-        //this->window->draw(this->makeX(90.0f, 90.f));
+        this->window->draw(this->makeCircle(50.0f, 50.0f));
+        this->window->draw(this->makeX(150.0f, 150.0f)[0]);
+        this->window->draw(this->makeX(150.0f, 150.0f)[1]);
+
         this->window->display();
     }
 
