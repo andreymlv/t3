@@ -7,7 +7,7 @@ compile:
 	g++ -c main.cpp
 
 link:
-	g++ main.o -lsfml-graphics -lsfml-window -lsfml-system
+	g++ -Wall -Wextra -O2 main.o -lsfml-graphics -lsfml-window -lsfml-system
 
 run:
 	./a.out

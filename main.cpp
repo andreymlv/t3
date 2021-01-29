@@ -1,141 +1,105 @@
 
+#include <cmath>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-class Ball
+enum
+{
+    WIDHT = 300,
+    HEIGHT = 300,
+};
+
+class Game
 {
 private:
-    sf::CircleShape shape;
-    float radius = 30.0f;
-    float ball_velocity = 3.0f;
-    sf::Vector2f velocity{-ball_velocity, ball_velocity};
+    sf::RenderWindow *window;
+    sf::ContextSettings settings;
+    sf::Event event;
 
-public:
-    sf::CircleShape get()
+    void initWindow()
     {
-        return shape;
+        /*
+            Create a window, adjust antialiasing, limit FPS
+        */
+        settings.antialiasingLevel = 8;
+        this->window = new sf::RenderWindow(sf::VideoMode(WIDHT, HEIGHT), "t3");
+        this->window->setFramerateLimit(60);
     }
 
-    float get_x()
+    void pollEvents()
     {
-        return shape.getPosition().x;
-    }
-
-    float get_y()
-    {
-        return shape.getPosition().y;
-    }
-
-    float left()
-    {
-        return get_x() - radius;
-    }
-
-    float right()
-    {
-        return get_x() + radius;
-    }
-
-    float top()
-    {
-        return get_y() - radius;
-    }
-
-    float bottom()
-    {
-        return get_y() + radius;
+        /*
+            Read events
+        */
+        while (this->window->pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                this->window->close();
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+                this->window->close();
+        }
     }
 
     void update()
     {
-        shape.move(velocity);
-
-        if (left() < 0)
-        {
-            velocity.x = ball_velocity;
-        }
-        else if (right() > 300.0f)
-        {
-            velocity.x = -ball_velocity;
-        }
-
-        if (top() < 0)
-        {
-            velocity.y = ball_velocity;
-        }
-        else if (bottom() > 300.0f)
-        {
-            velocity.y = -ball_velocity;
-        }
-        
+        this->pollEvents();
     }
 
-    Ball(float x_0, float y_0)
+    sf::CircleShape makeCircle(float x_0, float y_0)
     {
+        sf::CircleShape shape;
         shape.setPosition(x_0, y_0);
-        shape.setRadius(radius);
-        shape.setFillColor(sf::Color::White);
-        shape.setOrigin(radius, radius);
+        shape.setRadius(30);
+        shape.setOutlineColor(sf::Color::White);
+        shape.setOrigin(30, 30);
+        return shape;
     }
-};
 
-class Window
-{
-private:
-    float width = 300.0f;
-    float height = 300.0f;
-    std::string title = "t3";
-    sf::RenderWindow window{sf::VideoMode(width, height), title};
-    Ball o_player{width / 2.0f, height / 2.0f};
+    /*
+    sf::Shape makeX(float x_0, float y_0)
+    {
+        sf::Shape *shape;
+        
+        return shape;
+    }
+    */
+
+    void render()
+    {
+        this->window->clear(sf::Color::Black);
+        this->window->draw(this->makeCircle(39.0f, 30.0f));
+        //this->window->draw(this->makeX(90.0f, 90.f));
+        this->window->display();
+    }
 
 public:
-
-    float get_w()
-    {
-        return width;
-    }
-
-    float get_h()
-    {
-        return height;
-    }
-
-    void make_grid()
-    {
-    }
-
     void run()
     {
-        while (window.isOpen())
+        /*
+            Main game loop
+        */
+        while (this->window->isOpen())
         {
-            sf::Event event;
-            while (window.pollEvent(event))
-            {
-                if (event.type == sf::Event::Closed)
-                    window.close();
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
-                    window.close();
-            }
-
-            window.clear(sf::Color::Black);
-            o_player.update();
-            window.draw(o_player.get());
-            window.display();
+            this->update();
+            this->render();
         }
     }
 
-    Window()
+    Game()
     {
-        sf::ContextSettings settings;
-        settings.antialiasingLevel = 8;
+        this->initWindow();
+    }
 
-        window.setFramerateLimit(60);
+    ~Game()
+    {
+        delete this->window;
     }
 };
 
-int main()
+int main(void)
 {
-    Window win;
-    win.run();
+    Game game;
+    game.run();
+
     return 0;
 }
