@@ -1,5 +1,6 @@
 
 #include <array>
+#include <cstdio>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
@@ -16,6 +17,7 @@ private:
     sf::ContextSettings settings;
     sf::Event event;
     std::array<sf::VertexArray, 4> grid;
+    std::array<int, 9> game;
 
     void initWindow()
     {
@@ -33,12 +35,75 @@ private:
         /*
             Read events
         */
+        sf::Vector2i position = sf::Mouse::getPosition(*window);
+
         while (this->window->pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
                 this->window->close();
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
                 this->window->close();
+
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            {
+                if (position.x < 100)
+                {
+                    // Left side
+                    if (position.y < 100)
+                    {
+                        // 0
+                        std::printf("0\n");
+                    }
+                    else if (position.y > 100 && position.y < 200)
+                    {
+                        // 3
+                        std::printf("3\n");
+                    }
+                    else
+                    {
+                        // 6
+                        std::printf("6\n");
+                    }
+                }
+                else if (position.x > 100 && position.x < 200)
+                {
+                    // Central side
+                    if (position.y < 100)
+                    {
+                        // 1
+                        std::printf("1\n");
+                    }
+                    else if (position.y > 100 && position.y < 200)
+                    {
+                        // 4
+                        std::printf("4\n");
+                    }
+                    else
+                    {
+                        // 7
+                        std::printf("7\n");
+                    }
+                }
+                else if (position.x > 200)
+                {
+                    // Right side
+                    if (position.y < 100)
+                    {
+                        // 2
+                        std::printf("2\n");
+                    }
+                    else if (position.y > 100 && position.y < 200)
+                    {
+                        // 5
+                        std::printf("5\n");
+                    }
+                    else
+                    {
+                        // 8
+                        std::printf("8\n");
+                    }
+                }
+            }
         }
     }
 
