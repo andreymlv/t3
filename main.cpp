@@ -15,6 +15,7 @@ private:
     sf::RenderWindow *window;
     sf::ContextSettings settings;
     sf::Event event;
+    std::array<sf::VertexArray, 4> grid;
 
     void initWindow()
     {
@@ -24,6 +25,7 @@ private:
         settings.antialiasingLevel = 8;
         this->window = new sf::RenderWindow(sf::VideoMode(WIDHT, HEIGHT), "t3");
         this->window->setFramerateLimit(60);
+        this->grid = this->makeGrid();
     }
 
     void pollEvents()
@@ -45,14 +47,16 @@ private:
         this->pollEvents();
     }
 
-    sf::CircleShape makeCircle(float x_0, float y_0)
+    sf::CircleShape makeO(float x_0, float y_0)
     {
-        sf::CircleShape shape;
-        shape.setPosition(x_0, y_0);
-        shape.setRadius(30);
-        shape.setOutlineColor(sf::Color::White);
-        shape.setOrigin(30, 30);
-        return shape;
+        sf::CircleShape o;
+
+        o.setPosition(x_0, y_0);
+        o.setRadius(30);
+        o.setOutlineColor(sf::Color::White);
+        o.setOrigin(30, 30);
+
+        return o;
     }
 
     std::array<sf::VertexArray, 2> makeX(float x_0, float y_0)
@@ -71,12 +75,44 @@ private:
         return x;
     }
 
+    std::array<sf::VertexArray, 4> makeGrid()
+    {
+        sf::VertexArray first(sf::LineStrip, 2);
+        first[0].position = sf::Vector2f(0, 100);
+        first[1].position = sf::Vector2f(300, 100);
+
+        sf::VertexArray second(sf::LineStrip, 2);
+        second[0].position = sf::Vector2f(0, 200);
+        second[1].position = sf::Vector2f(300, 200);
+
+        sf::VertexArray third(sf::LineStrip, 2);
+        third[0].position = sf::Vector2f(100, 0);
+        third[1].position = sf::Vector2f(100, 300);
+
+        sf::VertexArray fourth(sf::LineStrip, 2);
+        fourth[0].position = sf::Vector2f(200, 0);
+        fourth[1].position = sf::Vector2f(200, 300);
+
+        std::array<sf::VertexArray, 4> grid = {first, second, third, fourth};
+
+        return grid;
+    }
+
     void render()
     {
-        this->window->clear(sf::Color::Black);
-        this->window->draw(this->makeCircle(50.0f, 50.0f));
-        this->window->draw(this->makeX(150.0f, 150.0f)[0]);
-        this->window->draw(this->makeX(150.0f, 150.0f)[1]);
+        this->window->clear();
+
+        this->window->draw(this->makeO(50.0f, 50.0f));
+
+        for (int i = 0; i < this->makeX(150.0f, 150.0f).size(); i++)
+        {
+            this->window->draw(this->makeX(150.0f, 150.0f)[i]);
+        }
+
+        for (int i = 0; i < this->grid.size(); ++i)
+        {
+            this->window->draw(this->grid[i]);
+        }
 
         this->window->display();
     }
