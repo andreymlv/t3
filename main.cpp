@@ -19,6 +19,7 @@ private:
     sf::Event event;
     std::array<sf::VertexArray, 4> grid;
     std::array<int, 9> game;
+    bool state = false; // false == move makes x
 
     void initWindow()
     {
@@ -28,6 +29,7 @@ private:
         settings.antialiasingLevel = 8;
         this->window = new sf::RenderWindow(sf::VideoMode(WIDHT, HEIGHT), "t3");
         this->window->setFramerateLimit(60);
+        this->game = {6, 6, 6, 6, 6, 6, 6, 6, 6};
         this->grid = this->makeGrid();
     }
 
@@ -52,32 +54,15 @@ private:
                     // Left side
                     if (position.y < 100)
                     {
-                        if ((this->game[0] != 0 || this->game[0] != 1))
-                        {
-                            /* code */
-                        }
-
-                        // 0
-                        std::printf("0\n");
+                        this->changeState(0);
                     }
                     else if (position.y > 100 && position.y < 200)
                     {
-                        if (this->game[3] != 0 || this->game[3] != 1)
-                        {
-                            /* code */
-                        }
-
-                        // 3
-                        std::printf("3\n");
+                        this->changeState(3);
                     }
                     else
                     {
-                        if (this->game[6] != 0 || this->game[6] != 1)
-                        {
-                            /* code */
-                        }
-                        // 6
-                        std::printf("6\n");
+                        this->changeState(6);
                     }
                 }
                 else if (position.x > 100 && position.x < 200)
@@ -85,32 +70,15 @@ private:
                     // Central side
                     if (position.y < 100)
                     {
-                        if (this->game[1] != 0 || this->game[1] != 1)
-                        {
-                            /* code */
-                        }
-
-                        // 1
-                        std::printf("1\n");
+                        this->changeState(1);
                     }
                     else if (position.y > 100 && position.y < 200)
                     {
-                        if (this->game[4] != 0 || this->game[4] != 1)
-                        {
-                            /* code */
-                        }
-
-                        // 4
-                        std::printf("4\n");
+                        this->changeState(4);
                     }
                     else
                     {
-                        if (this->game[7] != 0 || this->game[7] != 1)
-                        {
-                            /* code */
-                        }
-                        // 7
-                        std::printf("7\n");
+                        this->changeState(7);
                     }
                 }
                 else if (position.x > 200)
@@ -118,36 +86,44 @@ private:
                     // Right side
                     if (position.y < 100)
                     {
-                        if (this->game[2] != 0 || this->game[2] != 1)
-                        {
-                            /* code */
-                        }
-
-                        // 2
-                        std::printf("2\n");
+                        this->changeState(2);
                     }
                     else if (position.y > 100 && position.y < 200)
                     {
-                        if (this->game[5] != 0 || this->game[5] != 1)
-                        {
-                            /* code */
-                        }
-
-                        // 5
-                        std::printf("5\n");
+                        this->changeState(5);
                     }
                     else
                     {
-                        if (this->game[8] != 0 || this->game[8] != 1)
-                        {
-                            /* code */
-                        }
-                        // 8
-                        std::printf("8\n");
+                        this->changeState(8);
                     }
                 }
             }
         }
+    }
+
+    void changeState(int numberOfCell)
+    {
+        if (this->game[numberOfCell] == 0 || this->game[numberOfCell] == 1)
+        {
+            std::printf("the move was made in cell #");
+        }
+        else
+        {
+            if (this->state == false)
+            {
+                // move makes o
+                this->game[numberOfCell] = 0;
+                this->state = !this->state;
+            }
+            else
+            {
+                // move makes x
+                this->game[numberOfCell] = 1;
+                this->state = !this->state;
+            }
+        }
+
+        std::printf("%d - %d\n", numberOfCell, this->game[numberOfCell]);
     }
 
     void update()
@@ -161,7 +137,9 @@ private:
 
         o.setPosition(x_0, y_0);
         o.setRadius(30);
+        o.setFillColor(sf::Color::Black);
         o.setOutlineColor(sf::Color::White);
+        o.setOutlineThickness(1);
         o.setOrigin(30, 30);
 
         return o;
@@ -206,21 +184,103 @@ private:
         return grid;
     }
 
+    std::array<sf::VertexArray, 2> drawX(int numberOfCell)
+    {
+        switch (numberOfCell)
+        {
+        case 0:
+            return this->makeX(50, 50);
+            break;
+        case 1:
+            return this->makeX(150, 50);
+            break;
+        case 2:
+            return this->makeX(250, 50);
+            break;
+        case 3:
+            return this->makeX(50, 150);
+            break;
+        case 4:
+            return this->makeX(150, 150);
+            break;
+        case 5:
+            return this->makeX(250, 150);
+            break;
+        case 6:
+            return this->makeX(50, 250);
+            break;
+        case 7:
+            return this->makeX(150, 250);
+            break;
+        case 8:
+            return this->makeX(250, 250);
+            break;
+
+        default:
+            throw std::runtime_error("wrong cell");
+            break;
+        }
+    }
+
+    sf::CircleShape drawO(int numberOfCell)
+    {
+        switch (numberOfCell)
+        {
+        case 0:
+            return this->makeO(50, 50);
+            break;
+        case 1:
+            return this->makeO(150, 50);
+            break;
+        case 2:
+            return this->makeO(250, 50);
+            break;
+        case 3:
+            return this->makeO(50, 150);
+            break;
+        case 4:
+            return this->makeO(150, 150);
+            break;
+        case 5:
+            return this->makeO(250, 150);
+            break;
+        case 6:
+            return this->makeO(50, 250);
+            break;
+        case 7:
+            return this->makeO(150, 250);
+            break;
+        case 8:
+            return this->makeO(250, 250);
+            break;
+
+        default:
+            throw std::runtime_error("wrong cell");
+            break;
+        }
+    }
+
     void render()
     {
         this->window->clear();
 
-        // Example of drawing 'O'
-        this->window->draw(this->makeO(50.0f, 50.0f));
-
-        // Example of drawing 'X'
-        for (int i = 0; i < (int) this->makeX(150.0f, 150.0f).size(); i++)
+        for (int i = 0; i < (int)this->game.size(); i++)
         {
-            this->window->draw(this->makeX(150.0f, 150.0f)[i]);
+            if (this->game[i] == 0)
+            {
+                this->window->draw(this->drawO(i));
+            }
+            else if (this->game[i] == 1)
+            {
+                for (int j = 0; j < (int)this->drawX(0).size(); j++)
+                {
+                    this->window->draw(this->drawX(i)[j]);
+                }
+            }
         }
 
         // Drawing '#' grid
-        for (int i = 0; i < (int) this->grid.size(); ++i)
+        for (int i = 0; i < (int)this->grid.size(); ++i)
         {
             this->window->draw(this->grid[i]);
         }
