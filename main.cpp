@@ -1,6 +1,7 @@
 
 #include <array>
 #include <cstdio>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
@@ -35,7 +36,7 @@ private:
         /*
             Read events
         */
-        sf::Vector2i position = sf::Mouse::getPosition(*window);
+        sf::Vector2i position = sf::Mouse::getPosition(*(this->window));
 
         while (this->window->pollEvent(event))
         {
@@ -51,16 +52,30 @@ private:
                     // Left side
                     if (position.y < 100)
                     {
+                        if ((this->game[0] != 0 || this->game[0] != 1))
+                        {
+                            /* code */
+                        }
+
                         // 0
                         std::printf("0\n");
                     }
                     else if (position.y > 100 && position.y < 200)
                     {
+                        if (this->game[3] != 0 || this->game[3] != 1)
+                        {
+                            /* code */
+                        }
+
                         // 3
                         std::printf("3\n");
                     }
                     else
                     {
+                        if (this->game[6] != 0 || this->game[6] != 1)
+                        {
+                            /* code */
+                        }
                         // 6
                         std::printf("6\n");
                     }
@@ -70,16 +85,30 @@ private:
                     // Central side
                     if (position.y < 100)
                     {
+                        if (this->game[1] != 0 || this->game[1] != 1)
+                        {
+                            /* code */
+                        }
+
                         // 1
                         std::printf("1\n");
                     }
                     else if (position.y > 100 && position.y < 200)
                     {
+                        if (this->game[4] != 0 || this->game[4] != 1)
+                        {
+                            /* code */
+                        }
+
                         // 4
                         std::printf("4\n");
                     }
                     else
                     {
+                        if (this->game[7] != 0 || this->game[7] != 1)
+                        {
+                            /* code */
+                        }
                         // 7
                         std::printf("7\n");
                     }
@@ -89,16 +118,30 @@ private:
                     // Right side
                     if (position.y < 100)
                     {
+                        if (this->game[2] != 0 || this->game[2] != 1)
+                        {
+                            /* code */
+                        }
+
                         // 2
                         std::printf("2\n");
                     }
                     else if (position.y > 100 && position.y < 200)
                     {
+                        if (this->game[5] != 0 || this->game[5] != 1)
+                        {
+                            /* code */
+                        }
+
                         // 5
                         std::printf("5\n");
                     }
                     else
                     {
+                        if (this->game[8] != 0 || this->game[8] != 1)
+                        {
+                            /* code */
+                        }
                         // 8
                         std::printf("8\n");
                     }
@@ -167,14 +210,17 @@ private:
     {
         this->window->clear();
 
+        // Example of drawing 'O'
         this->window->draw(this->makeO(50.0f, 50.0f));
 
-        for (int i = 0; i < this->makeX(150.0f, 150.0f).size(); i++)
+        // Example of drawing 'X'
+        for (int i = 0; i < (int) this->makeX(150.0f, 150.0f).size(); i++)
         {
             this->window->draw(this->makeX(150.0f, 150.0f)[i]);
         }
 
-        for (int i = 0; i < this->grid.size(); ++i)
+        // Drawing '#' grid
+        for (int i = 0; i < (int) this->grid.size(); ++i)
         {
             this->window->draw(this->grid[i]);
         }
